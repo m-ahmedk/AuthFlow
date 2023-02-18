@@ -4,8 +4,8 @@
  * maintain the structure and modularity of the application. 
  */
 
-const errorSampleRoute = require('./error-sample')
+const userRoute = require('./user')
 
 module.exports = function(app) {
-    app.use('/api/v1/errormanagement', errorSampleRoute)
+    app.use('/api/v1/user', userRoute)
 }
