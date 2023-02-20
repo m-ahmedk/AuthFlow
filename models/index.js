@@ -1,3 +1,8 @@
+/**
+ * Centralized model that imports all the models used in this project, assigning them to db property and exporting it for
+ * implementing the business logics
+ */
+
 const { db, sequelize, DataTypes } = require("../db/connect")
 
 // defining schemas and model for the collections used in this project, in sequelize.

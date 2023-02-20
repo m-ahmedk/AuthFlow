@@ -76,7 +76,7 @@ const login = async (req, res) => {
                 // console.log("user", JSON.stringify(user, null, 2));
 
                 // send user data
-                return res.status(StatusCodes.CREATED).send(user);
+                return res.status(StatusCodes.OK).send(user);
             } else {
                 throw new UnauthorizedError('Authentication failed')
             }
