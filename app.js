@@ -1,12 +1,10 @@
 const express = require('express')
-require('express-async-errors')
-
-// environment variables
 require('dotenv').config()
-
-// import custom middlewares
+require('express-async-errors')
 const errorHandler = require('./middleware/error-handler')
 const pageNotFound = require('./middleware/not-found-handler')
+const db = require('./db/connect')
+const cookieParser = require('cookie-parser')
 
 // Swagger imports
 const swaggerUI = require('swagger-ui-express')
@@ -18,11 +16,15 @@ const app = express();
 // express middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
+app.use(cookieParser())
 
-// route
+// sync database to false to avoid data loss
+db.sequelize.sync({ force: false })
+
+// main route
 require('./routes/main')(app)
 
-// default route
+// default route to /api-docs
 app.get('/', (req, res) => {
     res.redirect('/api-docs');
 })
@@ -38,8 +40,8 @@ var options = {
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc, options));
 
 // error handler
-app.use(errorHandler);
 app.use(pageNotFound);
+app.use(errorHandler);
 
 const port = process.env.PORT || 3000;
 

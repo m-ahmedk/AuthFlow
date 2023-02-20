@@ -5,9 +5,11 @@
  */
 
 const BadRequestError = require('./bad-request')
+const ConflictError = require('./conflict')
 const ForbiddenError = require('./forbidden')
+const GenericError = require('./generic-error')
 const NotFoundError = require('./not-found')
 const UnauthorizedError = require('./unauthorized')
 const InternalServerError = require('./internal-server')
 
-module.exports = { BadRequestError, ForbiddenError, InternalServerError, NotFoundError, UnauthorizedError }
+module.exports = { BadRequestError, ConflictError, ForbiddenError, GenericError, InternalServerError, NotFoundError, UnauthorizedError }
