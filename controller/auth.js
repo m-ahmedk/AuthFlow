@@ -77,6 +77,7 @@ const login = async (req, res) => {
 
                 // send user data
                 return res.status(StatusCodes.OK).send(user);
+
             } else {
                 throw new UnauthorizedError('Authentication failed')
             }

@@ -1,7 +1,6 @@
 /**
  * Defining user model mapping with the postgres using sequelize library and DataTypes 
  */
-
 module.exports = (sequelize, DataTypes) => {
 
     const User = sequelize.define("user", {
