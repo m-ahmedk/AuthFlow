@@ -1,3 +1,7 @@
+/**
+ * Connecting to a PostgreSQL database and set sequelize property to db which is used to define models
+ * and interact with database
+ */
 const { Sequelize, DataTypes } = require('sequelize')
 require('dotenv').config()
 
@@ -12,7 +16,7 @@ sequelize.authenticate().then(() => {
 })
 
 const db = {}
-db.Sequelize = Sequelize
+// db.Sequelize = Sequelize
 db.sequelize = sequelize
 
 // exporting the module
