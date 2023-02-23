@@ -12,7 +12,7 @@ const sequelize = new Sequelize(uri, { dialect: "postgres", logging: false })
 sequelize.authenticate().then(() => {
     console.log(`Database connected to server..`)
 }).catch((err) => {
-    console.log(err)
+    console.log(`An error occured while making a db connection: ${err}`)
 })
 
 const db = {}
