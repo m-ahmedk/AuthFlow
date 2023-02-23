@@ -2,13 +2,15 @@
  * Centralized model that imports all the models used in this project, assigning them to db property and exporting it for
  * implementing the business logics
  */
-const { db, sequelize, DataTypes } = require("../db/connect")
+const { db } = require("../db/connect")
 
-// defining schemas and model for the collections used in this project, in sequelize.
-db.users = require('../models/users')(sequelize, DataTypes)
+// defining schema(s) and model(s) for the collections used in this project, in sequelize
+db.users = require('../models/users')
+db.verification = require('../models/verification')
 
 // assign resulting model(s) above to variable
 const User = db.users
+const Verification = db.verification
 
 
-module.exports = { User }
+module.exports = { User, Verification }
