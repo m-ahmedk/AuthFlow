@@ -25,6 +25,10 @@ const User = sequelize.define("User", {
         unique: true,
         allowNull: false
     },
+    phonenumber: {
+        type: DataTypes.STRING,
+        unique: true
+    },
     password: {
         type: DataTypes.STRING,
         allowNull: false
@@ -32,9 +36,5 @@ const User = sequelize.define("User", {
 },
 { timestamps: true },
 )
-
-// associate User with Verification
-User.belongsTo(Verification, { foreignKey: 'verificationId' });
-
 
 module.exports = User

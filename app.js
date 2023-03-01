@@ -5,6 +5,7 @@ const errorHandler = require('./middleware/error-handler')
 const pageNotFound = require('./middleware/not-found-handler')
 const db = require('./db/connect')
 const cookieParser = require('cookie-parser')
+const cors = require('cors') // allows access to public domain
 
 // Swagger imports
 const swaggerUI = require('swagger-ui-express')
@@ -17,6 +18,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
+
+// enable cors
+app.use(cors());
 
 // sync database to false to avoid data loss
 db.sequelize.sync({ force: false })
