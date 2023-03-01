@@ -3,7 +3,6 @@
  */
 
 const { sequelize, DataTypes } = require("../db/connect")
-const User = require('./users')
 
 const Verification = sequelize.define('Verification', {
     verificationId: {
@@ -26,5 +25,6 @@ const Verification = sequelize.define('Verification', {
     },
 },
 { timestamps: true },);
+
 
 module.exports = Verification;
