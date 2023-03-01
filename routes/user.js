@@ -5,11 +5,13 @@
 
 const express = require('express')
 const userController = require('../controller/auth')
-const { signup, login } = userController
+const { send_otp, verify_otp, signup, login } = userController
+const { otp_pre_verification } = require('../middleware/validation/otp-pre-verification')
 const { signupValidation } = require('../middleware/validation/signup-verification')
 
 const userRoute = express.Router()
 
+userRoute.post('/sendotp', otp_pre_verification, send_otp)
 userRoute.post('/signup', signupValidation, signup)
 userRoute.post('/login', login)
 

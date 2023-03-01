@@ -5,8 +5,10 @@
 const { db } = require("../db/connect")
 
 // defining schema(s) and model(s) for the collections used in this project, in sequelize
-db.users = require('../models/users')
-db.verification = require('../models/verification')
+db.users = require('./users')
+db.verification = require('./verification')
+
+require('./associations');
 
 // assign resulting model(s) above to variable
 const User = db.users

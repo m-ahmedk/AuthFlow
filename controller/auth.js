@@ -1,17 +1,56 @@
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 require('dotenv').config()
-const { BadRequestError, GenericError, UnauthorizedError  } = require('../errors/index')
+const { BadRequestError, GenericError, UnauthorizedError } = require('../errors/index')
 const { StatusCodes } = require("http-status-codes")
-const { User } = require('../models/index')
+var fs = require('fs');
+const path = require('path');
+const { User, Verification } = require('../models/index')
+const verificationModel = require('../models/custom/verification-api-model')
+const sendEmail = require('../models/mailgun')
+const generateRandomString = require('../utils/randomstring')
+
+const send_otp = async (req, res) => {
+    try {
+        const { email } = req.body
+        const code = await generateRandomString(6)
+
+        // mailgun process
+        var emailBody = fs.readFileSync(path.join(__dirname, '../public/html/otp-mail.html')).toString();
+        emailBody = emailBody.replace('{pincode}', code);
+        const response = await sendEmail(email, `Please verify your OTP to continue for registration`, emailBody);
+
+        // on response 200, insert or update email to database
+        console.log(response)
+
+        if(response.status === 200) {
+            // await Verification.upsert({ email })
+            res.status(StatusCodes.OK).json(`OTP sent to ${email}`)
+        }
+        
+        res.status(StatusCodes.OK).json(`Issue in Mailgun: ${response}`)
+    }
+    catch (error) {
+        throw new GenericError(error, error.statusCode)
+    }
+}
+
+const verify_otp = async (req, res) => {
+    try {
+
+    }   
+    catch (error) {
+
+    } 
+}
 
 // signing a user up
-// hashing users password before its saved to the database with bcrypt
+// hashing users password before it is saved to the database with bcrypt
 const signup = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        const salt = await bcrypt.genSalt(10)
+        const salt = await bcrypt.genSalt(10);
         let hashedPassword = await bcrypt.hash(password, salt);
 
         const data = {
@@ -31,7 +70,7 @@ const signup = async (req, res) => {
                 expiresIn: 1 * 24 * 60 * 60 * 1000,
             });
 
-            res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
+            // res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
 
             console.log("user", JSON.stringify(user, null, 2));
             console.log(token);
@@ -58,7 +97,7 @@ const login = async (req, res) => {
                 email: email
             }
         });
-        
+
         // if user email is found, compare password with bcrypt
         if (user) {
             const matched = await bcrypt.compare(password, user.password);
@@ -90,6 +129,8 @@ const login = async (req, res) => {
 };
 
 module.exports = {
+    send_otp,
+    verify_otp,
     signup,
     login,
 };
