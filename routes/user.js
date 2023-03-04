@@ -12,6 +12,8 @@ const { signupValidation } = require('../middleware/validation/signup-verificati
 const userRoute = express.Router()
 
 userRoute.post('/sendotp', otp_pre_verification, send_otp)
+//userRoute.post('/verifyotp', otp_pre_verification, verify_otp)
+
 userRoute.post('/signup', signupValidation, signup)
 userRoute.post('/login', login)
 

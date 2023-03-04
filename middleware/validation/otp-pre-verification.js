@@ -17,15 +17,16 @@ const otp_pre_verification = async (req, res, next) => {
             // next handler
             next()
         }
+        else {
+            // is verified, check if registered
+            let hasRegistered = await registered(email)
 
-        // is verified, check if registered
-        let hasRegistered = await registered(email)
+            if ( !hasRegistered ) {
+                res.status(StatusCodes.OK).json(`User is verified. Redirect to register screen.`)
+            }
 
-        if ( !hasRegistered ) {
-            res.status(StatusCodes.OK).json(`User is verified. Redirect to register screen.`)
+            res.status(StatusCodes.OK).json(`User with email '${email}' is already registered`)
         }
-
-        res.status(StatusCodes.OK).json(`User with email '${email}' is already registered`)
     }
     catch (error) {
         throw new GenericError(error, error.statusCode)

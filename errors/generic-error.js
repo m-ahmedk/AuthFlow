@@ -4,8 +4,16 @@
 
 class GenericError extends Error {
     constructor(message, statusCode) {
-        super(message)
-        this.statusCode = statusCode
+        if (message.name && message.name === 'SequelizeForeignKeyConstraintError') {
+            message = message.name + ': ' + message.parent.detail
+
+            super(message)
+            this.statusCode = statusCode
+        }
+        else {
+            super(message)
+            this.statusCode = statusCode
+        }
     }
 }
 
