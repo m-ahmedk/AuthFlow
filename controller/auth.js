@@ -18,17 +18,20 @@ const send_otp = async (req, res) => {
         // mailgun process
         var emailBody = fs.readFileSync(path.join(__dirname, '../public/html/otp-mail.html')).toString();
         emailBody = emailBody.replace('{pincode}', code);
-        const response = await sendEmail(email, `Please verify your OTP to continue for registration`, emailBody);
-
-        // on response 200, insert or update email to database
-        console.log(response)
+        // const response = await sendEmail(email, `You have received a new OTP`, emailBody);
+        
+        // dummy
+        const response = {
+            status: 200
+        }
 
         if(response.status === 200) {
-            // await Verification.upsert({ email })
+            await Verification.upsert({ email })
             res.status(StatusCodes.OK).json(`OTP sent to ${email}`)
         }
-        
-        res.status(StatusCodes.OK).json(`Issue in Mailgun: ${response}`)
+        else {
+            res.status(StatusCodes.OK).json(`Issue in Mailgun: ${response}`)
+        }    
     }
     catch (error) {
         throw new GenericError(error, error.statusCode)

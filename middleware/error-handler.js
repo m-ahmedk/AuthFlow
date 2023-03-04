@@ -19,6 +19,13 @@ const errorHandler = (err, req, res, next) => {
         statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR
     }
 
+    console.log(err)
+
+    if(err.code === '23503') {
+        customError.message = 'SequelizeForeignKeyConstraintError: insert or update on table';
+        customError.statusCode = StatusCodes.INTERNAL_SERVER_ERROR
+    }
+
     dashLogger.error(`Error: ${customError.message}`)
     res.status(customError.statusCode).json({"message": customError.message})
 }
