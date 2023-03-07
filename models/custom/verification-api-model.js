@@ -1,9 +1,9 @@
 
 class verificationModel {
     constructor(verified, registered, message) {
-        this.verified = verified;
-        this.registered = registered;
-        this.message = message;
+        this.verified = verified
+        this.registered = registered
+        this.message = message
     }
 }
 

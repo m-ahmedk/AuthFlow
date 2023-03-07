@@ -1,5 +1,4 @@
 require('dotenv').config();
-
 const formData = require('form-data');
 const Mailgun = require('mailgun.js');
 const { InternalServerError } = require('../errors/index');
