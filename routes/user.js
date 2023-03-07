@@ -6,13 +6,14 @@
 const express = require('express')
 const userController = require('../controller/auth')
 const { send_otp, verify_otp, signup, login } = userController
-const { otp_pre_verification } = require('../middleware/validation/otp-pre-verification')
+const { verification } = require('../middleware/validation/pre-verification')
 const { signupValidation } = require('../middleware/validation/signup-verification')
+const { check_expiration } = require('../middleware/validation/otp-verification')
 
 const userRoute = express.Router()
 
-userRoute.post('/sendotp', otp_pre_verification, send_otp)
-//userRoute.post('/verifyotp', otp_pre_verification, verify_otp)
+userRoute.post('/sendotp', verification, send_otp)
+userRoute.post('/verifyotp', check_expiration, verify_otp)
 
 userRoute.post('/signup', signupValidation, signup)
 userRoute.post('/login', login)

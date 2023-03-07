@@ -3,7 +3,6 @@
  */
 
 const { sequelize, DataTypes } = require("../db/connect")
-const Verification = require('./verification')
 
 const User = sequelize.define("User", {
     userId: {

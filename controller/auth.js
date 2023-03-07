@@ -18,20 +18,25 @@ const send_otp = async (req, res) => {
         // mailgun process
         var emailBody = fs.readFileSync(path.join(__dirname, '../public/html/otp-mail.html')).toString();
         emailBody = emailBody.replace('{pincode}', code);
-        // const response = await sendEmail(email, `You have received a new OTP`, emailBody);
+        // const ack = await sendEmail(email, `You have received a new OTP`, emailBody);
         
         // dummy
-        const response = {
+        const ack = {
             status: 200
         }
+        
+        let message = ''
 
-        if(response.status === 200) {
-            await Verification.upsert({ email })
-            res.status(StatusCodes.OK).json(`OTP sent to ${email}`)
+        if(ack.status === 200) {
+            await Verification.upsert({ email: email, otp: code, verified: 0 })
+            message = `OTP (${code}) has been sent to ${email}, OTP mentioned for purpose of ease.`
         }
         else {
-            res.status(StatusCodes.OK).json(`Issue in Mailgun: ${response}`)
-        }    
+            message = `Issues using mailgun: ${ack}`
+        }
+
+        const response = new verificationModel(0, 0, message);
+        res.status(StatusCodes.OK).json(response)
     }
     catch (error) {
         throw new GenericError(error, error.statusCode)
@@ -40,11 +45,31 @@ const send_otp = async (req, res) => {
 
 const verify_otp = async (req, res) => {
     try {
+        const { email, otp } = req.body
+        const _verification = await Verification.findOne({
+            where: {
+                email: email,
+            }
+        });
 
-    }   
+        let message = ''
+        let verified = 0
+        if (otp === _verification.otp) {
+            verified = 1
+            message = 'OTP has been verified. Proceed to register screen.'
+
+            // update verified to 1
+        }
+        else {
+            message = 'OTP did not match. Enter the correct OTP to continue.'
+        }
+
+        const response = new verificationModel(verified, 0, message)
+        res.status(StatusCodes.OK).json(response)
+    }
     catch (error) {
 
-    } 
+    }
 }
 
 // signing a user up

@@ -3,7 +3,7 @@ const { GenericError, BadRequestError } = require('../../errors/index')
 const { User, Verification } = require('../../models/index')
 
 // use verification-api-model
-const otp_pre_verification = async (req, res, next) => {
+const verification = async (req, res, next) => {
     try {
         let { email } = req.body
 
@@ -35,14 +35,14 @@ const otp_pre_verification = async (req, res, next) => {
 
 // check if verified
 const verified = async (email) => {
-    const verification = await Verification.findOne({
+    const _verification = await Verification.findOne({
         where: {
             email: email
         }
     });
 
-    if (verification) {
-        if (verification.verified != true) {
+    if (_verification) {
+        if (_verification.verified != true) {
             return false
         }
         else {
@@ -68,4 +68,4 @@ const registered = async (email) => {
     return false
 }
 
-module.exports = { otp_pre_verification }
+module.exports = { verification }
