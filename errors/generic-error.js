@@ -4,7 +4,6 @@
 
 class GenericError extends Error {
     constructor(message, statusCode) {
-
         const sequelizeErrors = ["SequelizeUniqueConstraintError", "SequelizeForeignKeyConstraintError"];
 
         if (message.name && sequelizeErrors.includes(message.name)) {
@@ -13,6 +12,7 @@ class GenericError extends Error {
 
         super(message)
         this.statusCode = statusCode
+
     }
 }
 

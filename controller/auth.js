@@ -37,6 +37,7 @@ const send_otp = async (req, res) => {
 
         const response = new verificationModel(0, 0, message);
         res.status(StatusCodes.OK).json(response)
+
     }
     catch (error) {
         throw new GenericError(error, error.statusCode)
