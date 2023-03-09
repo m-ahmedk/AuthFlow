@@ -13,7 +13,7 @@ const { check_expiration } = require('../middleware/validation/otp-verification'
 const userRoute = express.Router()
 
 userRoute.post('/sendotp', verification, send_otp)
-userRoute.post('/verifyotp', check_expiration, verify_otp)
+userRoute.post('/verifyotp', verification, check_expiration, verify_otp)
 
 userRoute.post('/signup', signupValidation, signup)
 userRoute.post('/login', login)
