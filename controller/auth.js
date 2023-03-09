@@ -35,7 +35,7 @@ const send_otp = async (req, res) => {
             message = `Issues using mailgun: ${ack}`
         }
 
-        const response = new verificationModel(0, 0, message);
+        const response = new verificationModel(false, false, message);
         res.status(StatusCodes.OK).json(response)
     }
     catch (error) {
@@ -53,18 +53,19 @@ const verify_otp = async (req, res) => {
         });
 
         let message = ''
-        let verified = 0
+        let verified = false
         if (otp === _verification.otp) {
-            verified = 1
-            message = 'OTP has been verified. Proceed to register screen.'
+            verified = true
+            message = 'OTP has been verified. Proceed to register/signup screen.'
 
-            // update verified to 1
+            _verification.verified = verified; // set verified field to true
+            await _verification.save(); // persist changes in the database
         }
         else {
             message = 'OTP did not match. Enter the correct OTP to continue.'
         }
 
-        const response = new verificationModel(verified, 0, message)
+        const response = new verificationModel(verified, false, message)
         res.status(StatusCodes.OK).json(response)
     }
     catch (error) {
