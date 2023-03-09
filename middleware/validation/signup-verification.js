@@ -24,7 +24,7 @@ const signupValidation = async (req, res, next) => {
 
         if (_username) {
             // if username exist in the database respond with a conflict status
-            throw new ConflictError("username already taken")
+            throw new ConflictError("username already exists")
         }
 
         const _email = await User.findOne({
@@ -35,7 +35,7 @@ const signupValidation = async (req, res, next) => {
 
         if (_email) {
             // if email exist in the database respond with a conflict status
-            throw new ConflictError("Authentication failed")
+            throw new ConflictError("email already exists")
         }
 
         next();

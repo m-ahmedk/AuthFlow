@@ -133,11 +133,13 @@ const login = async (req, res) => {
                 // send user data
                 return res.setHeader('Authorization', 'Bearer ' + token).status(StatusCodes.OK).send(user);
 
-            } else {
-                throw new UnauthorizedError('Authentication failed')
+            } 
+            else {
+                throw new UnauthorizedError('Incorrect Password')
             }
-        } else {
-            throw new UnauthorizedError('Authentication failed')
+        } 
+        else {
+            throw new UnauthorizedError(`Authentication failed. User doesn't exist.`)
         }
     } catch (error) {
         throw new GenericError(error, error.statusCode)
