@@ -2,14 +2,23 @@
     Check if a username or email already exists in the database before allowing a user to sign up.
 */
 
-const { ConflictError, GenericError } = require('../../errors/index')
+const { ConflictError, GenericError, BadRequestError } = require('../../errors/index')
 const { User } = require('../../models/index')
+const isEmpty = require('../../utils/required-fields')
 
 const signupValidation = async (req, res, next) => {
     try {
+
+        const { username, name, email, phonenumber, password } = req.body
+
+        const empty = await isEmpty( {username, name, email, phonenumber, password} )
+        if(empty) {
+            throw new BadRequestError('One or more fields missing')
+        }
+
         const _username = await User.findOne({
             where: {
-                username: req.body.username,
+                username: username,
             },
         });
 
@@ -20,7 +29,7 @@ const signupValidation = async (req, res, next) => {
 
         const _email = await User.findOne({
             where: {
-                email: req.body.email,
+                email: email,
             },
         });
 
