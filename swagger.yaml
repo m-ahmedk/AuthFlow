@@ -2,7 +2,10 @@ openapi: 3.0.0
 info:
   title: AuthFlow
   description: This is a Node.js application that provides a secure and user-friendly authentication system using JWT for user registration, login, and authorization. It uses a Postgres database and the Sequelize ORM to store and manage user data. This project aims to provide a robust and secure authentication system with centralized error management for easy troubleshooting and maintenance.
-  contact: {}
+  contact:
+    name: Muhammad Ahmed Villa Khan
+    url: https://github.com/m-ahmedk
+    email: m.ahmedk287@gmail.com
   version: '1.0'
 servers:
 - url: http://localhost:3000/api/v1/user
@@ -94,7 +97,7 @@ paths:
       tags:
       - Authorization
       summary: Verify OTP
-      description: After receiving the OTP, user must enter their OTP pin which they receive on their email.
+      description: After receiving the OTP, user must enter their OTP pin which they have received on their email.
       operationId: VerifyOTP
       parameters: []
       requestBody:
@@ -106,10 +109,10 @@ paths:
               - $ref: '#/components/schemas/VerifyOTPRequest'
               - example:
                   email: m.ahmedk287@gmail.com
-                  otp: 3tmdxB
+                  otp: nBKatV
             example:
               email: m.ahmedk287@gmail.com
-              otp: 3tmdxB
+              otp: nBKatV
         required: true
       responses:
         '200':
@@ -243,10 +246,14 @@ paths:
               - $ref: '#/components/schemas/RegisterRequest'
               - example:
                   username: mahmedk
+                  name: M. Ahmed
+                  phonenumber: '+923418380518'
                   email: m.ahmedk287@gmail.com
                   password: ahmed123$
             example:
               username: mahmedk
+              name: M. Ahmed
+              phonenumber: '+923418380518'
               email: m.ahmedk287@gmail.com
               password: ahmed123$
         required: true
@@ -533,6 +540,7 @@ paths:
               example:
                 message: 'Error: Incorrect Password'
       deprecated: false
+      security: []
 components:
   schemas:
     SendOTPRequest:
@@ -612,7 +620,7 @@ components:
           type: string
       example:
         email: m.ahmedk287@gmail.com
-        otp: 3tmdxB
+        otp: nBKatV
     Verified:
       title: Verified
       required:
@@ -645,11 +653,17 @@ components:
       title: RegisterRequest
       required:
       - username
+      - name
+      - phonenumber
       - email
       - password
       type: object
       properties:
         username:
+          type: string
+        name:
+          type: string
+        phonenumber:
           type: string
         email:
           type: string
@@ -657,6 +671,8 @@ components:
           type: string
       example:
         username: mahmedk
+        name: M. Ahmed
+        phonenumber: '+923418380518'
         email: m.ahmedk287@gmail.com
         password: ahmed123$
     Usercreated:
@@ -783,4 +799,4 @@ components:
         message: "Error: Authentication failed. User doesn't exist."
 tags:
 - name: Authorization
-  description: ''
+  description: User authentication is implemented using JSON Web Tokens (JWT), which ensures secure and reliable authentication. To enhance the security of the application, OTP is used, and emails containing the OTP are sent using the mailgun.js library.
