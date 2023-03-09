@@ -22,6 +22,7 @@ const verification = async (req, res, next) => {
             let message = ''
             let isVerified = true;
             let isRegistered = false;
+
             // is verified, check if registered
             let hasRegistered = await registered(email)
 

@@ -1,31 +1,39 @@
 openapi: 3.0.0
 info:
-  title: Error Management
-  description: >-
-    A project for centralizing error handling in an application by using a middleware. The middleware will receive all errors thrown by the application, return a custom error message along with a relevant HTTP status code, and assign a default internal server error (HTTP 500) with a custom message if any of the errors go unhandled.
-
-
-    This system helps to provide consistent, structured, and comprehensive error handling in the application.
+  title: AuthFlow
+  description: This is a Node.js application that provides a secure and user-friendly authentication system using JWT for user registration, login, and authorization. It uses a Postgres database and the Sequelize ORM to store and manage user data. This project aims to provide a robust and secure authentication system with centralized error management for easy troubleshooting and maintenance.
   contact:
     name: Muhammad Ahmed Villa Khan
-    url: https://www.linkedin.com/in/muhammad-ahmed-379872126/
+    url: https://github.com/m-ahmedk
     email: m.ahmedk287@gmail.com
   version: '1.0'
 servers:
-- url: http://localhost:3000/api/v1/errormanagement
+- url: http://localhost:3000/api/v1/user
   variables: {}
 paths:
-  /badrequest:
-    get:
+  /sendotp:
+    post:
       tags:
-      - Misc
-      summary: Bad Request
-      description: BAD REQUEST exception is thrown and handled by the middleware that converts the error to a customized message depending on the error code.
-      operationId: BadRequest
+      - Authorization
+      summary: Send OTP
+      description: The initial step to access to the application, user must use the OTP functionality to receive the OTP for verification process.
+      operationId: SendOTP
       parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/SendOTPRequest'
+              - example:
+                  email: m.ahmedk287@gmail.com
+            example:
+              email: m.ahmedk287@gmail.com
+        required: true
       responses:
-        '400':
-          description: Bad Request
+        '200':
+          description: OK
           headers:
             X-Powered-By:
               content:
@@ -33,24 +41,30 @@ paths:
                   schema:
                     type: string
                   example: Express
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '*'
             Content-Length:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: '98'
+                  example: '137'
             ETag:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: W/"62-BLkn+Ap1A2QDvlJ0CjNUrqrspHg"
+                  example: W/"89-JNSR8y4bf2XKeSNQ9ynii3Tm2hQ"
             Date:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: Wed, 01 Feb 2023 17:48:56 GMT
+                  example: Thu, 09 Mar 2023 10:42:58 GMT
             Connection:
               content:
                 text/plain:
@@ -67,22 +81,98 @@ paths:
             application/json; charset=utf-8:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/BadRequestSampleResponse1'
+                - $ref: '#/components/schemas/OTPsent'
                 - example:
-                    message: Missing required parameters, invalid data types, or incorrect syntax in the request.
+                    verified: false
+                    registered: false
+                    message: OTP (60Zzva) has been sent to m.ahmedk287@gmail.com, OTP mentioned for purpose of ease.
               example:
-                message: Missing required parameters, invalid data types, or incorrect syntax in the request.
+                verified: false
+                registered: false
+                message: OTP (60Zzva) has been sent to m.ahmedk287@gmail.com, OTP mentioned for purpose of ease.
       deprecated: false
       security: []
-  /forbidden:
-    get:
+  /verifyotp:
+    post:
       tags:
-      - Misc
-      summary: Forbidden
-      description: FORBIDDEN exception is thrown and handled by the middleware that converts the error to a customized message depending on the error code.
-      operationId: Forbidden
+      - Authorization
+      summary: Verify OTP
+      description: After receiving the OTP, user must enter their OTP pin which they have received on their email.
+      operationId: VerifyOTP
       parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/VerifyOTPRequest'
+              - example:
+                  email: m.ahmedk287@gmail.com
+                  otp: nBKatV
+            example:
+              email: m.ahmedk287@gmail.com
+              otp: nBKatV
+        required: true
       responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Express
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '*'
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '106'
+            ETag:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: W/"6a-BLaJYyZa8YZjD5Y/zXaIbKHY5x0"
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Thu, 09 Mar 2023 10:44:53 GMT
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: keep-alive
+            Keep-Alive:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: timeout=5
+          content:
+            application/json; charset=utf-8:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Verified'
+                - example:
+                    verified: true
+                    registered: false
+                    message: OTP has been verified. Proceed to register/signup screen.
+              example:
+                verified: true
+                registered: false
+                message: OTP has been verified. Proceed to register/signup screen.
         '403':
           description: Forbidden
           headers:
@@ -92,24 +182,30 @@ paths:
                   schema:
                     type: string
                   example: Express
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '*'
             Content-Length:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: '69'
+                  example: '68'
             ETag:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: W/"45-W2E6IR1615WTltvvYUC2PwYqwA4"
+                  example: W/"44-2AvdbbBuhBRQm4rqLTbvnlLb6Cw"
             Date:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: Wed, 01 Feb 2023 17:48:30 GMT
+                  example: Thu, 09 Mar 2023 11:08:41 GMT
             Connection:
               content:
                 text/plain:
@@ -126,24 +222,44 @@ paths:
             application/json; charset=utf-8:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/ForbiddenSampleResponse1'
+                - $ref: '#/components/schemas/OTPexpired1'
                 - example:
-                    message: You are not authorized to access the requested resource
+                    message: 'Error: OTP has expired. Request a new OTP to continue.'
               example:
-                message: You are not authorized to access the requested resource
+                message: 'Error: OTP has expired. Request a new OTP to continue.'
       deprecated: false
       security: []
-  /notfound:
-    get:
+  /signup:
+    post:
       tags:
-      - Misc
-      summary: Not Found
-      description: NOT FOUND exception is thrown and handled by the middleware that converts the error to a customized message depending on the error code.
-      operationId: NotFound
+      - Authorization
+      summary: Register
+      description: Once verified, user may enter their details and register themselves to the application.
+      operationId: Register
       parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/RegisterRequest'
+              - example:
+                  username: mahmedk
+                  name: M. Ahmed
+                  phonenumber: '+923418380518'
+                  email: m.ahmedk287@gmail.com
+                  password: ahmed123$
+            example:
+              username: mahmedk
+              name: M. Ahmed
+              phonenumber: '+923418380518'
+              email: m.ahmedk287@gmail.com
+              password: ahmed123$
+        required: true
       responses:
-        '404':
-          description: Not Found
+        '201':
+          description: Created
           headers:
             X-Powered-By:
               content:
@@ -151,24 +267,36 @@ paths:
                   schema:
                     type: string
                   example: Express
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '*'
+            Authorization:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjc4MzYwMjI4LCJleHAiOjE3NjQ3NjAyMjh9.jMu07OhEP_D7De3c0Vac-yE5QGf98-LtR2D3BjMFP88
             Content-Length:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: '140'
+                  example: '265'
             ETag:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: W/"8c-2r8H1lRee8vrNM14FrQ53uqQjq4"
+                  example: W/"109-rGS0mavwRMl6xGttHxvA7VTKWpg"
             Date:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: Wed, 01 Feb 2023 17:48:04 GMT
+                  example: Thu, 09 Mar 2023 11:10:28 GMT
             Connection:
               content:
                 text/plain:
@@ -185,22 +313,178 @@ paths:
             application/json; charset=utf-8:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/NotFound1'
+                - $ref: '#/components/schemas/Usercreated'
                 - example:
-                    message: Unable to locate the requested resource, either because it doesn't exist, or because the URL that the client used is incorrect
+                    userId: 4
+                    username: mahmedk
+                    name: M. Ahmed
+                    email: m.ahmedk287@gmail.com
+                    phonenumber: '+923418380518'
+                    password: $2a$10$8..iLA7cwG80GpbsZddL6uFYc0FdzjrqiO3669vyy6LWCd7PfKHBG
+                    updatedAt: 2023-03-09T11:10:28.814Z
+                    createdAt: 2023-03-09T11:10:28.814Z
               example:
-                message: Unable to locate the requested resource, either because it doesn't exist, or because the URL that the client used is incorrect
+                userId: 4
+                username: mahmedk
+                name: M. Ahmed
+                email: m.ahmedk287@gmail.com
+                phonenumber: '+923418380518'
+                password: $2a$10$8..iLA7cwG80GpbsZddL6uFYc0FdzjrqiO3669vyy6LWCd7PfKHBG
+                updatedAt: 2023-03-09T11:10:28.814Z
+                createdAt: 2023-03-09T11:10:28.814Z
+        '409':
+          description: Conflict
+          headers:
+            X-Powered-By:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Express
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '*'
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '44'
+            ETag:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: W/"2c-c29JaNXGG9EpbOef5Dz4ktVKVlY"
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Thu, 09 Mar 2023 11:12:00 GMT
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: keep-alive
+            Keep-Alive:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: timeout=5
+          content:
+            application/json; charset=utf-8:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Userexists1'
+                - example:
+                    message: 'Error: username already exists'
+              example:
+                message: 'Error: username already exists'
       deprecated: false
       security: []
-  /unauthorized:
-    get:
+  /login:
+    post:
       tags:
-      - Misc
-      summary: Unauthorized
-      description: UNAUTHORIZED exception is thrown and handled by the middleware that converts the error to a customized message depending on the error code.
-      operationId: Unauthorized
+      - Authorization
+      summary: Login
+      description: Login to access application resource. Access to resources will be authorized via JWT set by the login function.
+      operationId: Login
       parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/LoginRequest'
+              - example:
+                  email: m.ahmedk287@gmail.com
+                  password: ahmed123$
+            example:
+              email: m.ahmedk287@gmail.com
+              password: ahmed123$
+        required: true
       responses:
+        '200':
+          description: OK
+          headers:
+            X-Powered-By:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Express
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '*'
+            Authorization:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NzgzNjA0MDksImV4cCI6MTc2NDc2MDQwOX0.auDwR_c-YWzkQLEja_YVSRUO2fmRmRIfXFKuchwy56c
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '265'
+            ETag:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: W/"109-GEInIymJiwYxDWplZ64X6uikqmM"
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Thu, 09 Mar 2023 11:13:29 GMT
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: keep-alive
+            Keep-Alive:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: timeout=5
+          content:
+            application/json; charset=utf-8:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Loggedin'
+                - example:
+                    userId: 4
+                    username: mahmedk
+                    name: M. Ahmed
+                    email: m.ahmedk287@gmail.com
+                    phonenumber: '+923418380518'
+                    password: $2a$10$8..iLA7cwG80GpbsZddL6uFYc0FdzjrqiO3669vyy6LWCd7PfKHBG
+                    createdAt: 2023-03-09T11:10:28.814Z
+                    updatedAt: 2023-03-09T11:10:28.814Z
+              example:
+                userId: 4
+                username: mahmedk
+                name: M. Ahmed
+                email: m.ahmedk287@gmail.com
+                phonenumber: '+923418380518'
+                password: $2a$10$8..iLA7cwG80GpbsZddL6uFYc0FdzjrqiO3669vyy6LWCd7PfKHBG
+                createdAt: 2023-03-09T11:10:28.814Z
+                updatedAt: 2023-03-09T11:10:28.814Z
         '401':
           description: Unauthorized
           headers:
@@ -210,24 +494,30 @@ paths:
                   schema:
                     type: string
                   example: Express
+            Access-Control-Allow-Origin:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: '*'
             Content-Length:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: '124'
+                  example: '39'
             ETag:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: W/"7c-XKCWfV4pI3WT1LnoYfIg0E//H8c"
+                  example: W/"27-cYNoxeOcpAKdwQc2YeBmU4dC9B0"
             Date:
               content:
                 text/plain:
                   schema:
                     type: string
-                  example: Wed, 01 Feb 2023 17:47:38 GMT
+                  example: Thu, 09 Mar 2023 11:30:31 GMT
             Connection:
               content:
                 text/plain:
@@ -244,17 +534,113 @@ paths:
             application/json; charset=utf-8:
               schema:
                 allOf:
-                - $ref: '#/components/schemas/UnauthorizedSampleResponse1'
+                - $ref: '#/components/schemas/Incorrectpassword1'
                 - example:
-                    message: Please provide a valid username and password or other form of authentication to access the requested resource.
+                    message: 'Error: Incorrect Password'
               example:
-                message: Please provide a valid username and password or other form of authentication to access the requested resource.
+                message: 'Error: Incorrect Password'
       deprecated: false
       security: []
 components:
   schemas:
-    BadRequestSampleResponse1:
-      title: BadRequestSampleResponse1
+    SendOTPRequest:
+      title: SendOTPRequest
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          type: string
+      example:
+        email: m.ahmedk287@gmail.com
+    OTPsent:
+      title: OTPsent
+      required:
+      - verified
+      - registered
+      - message
+      type: object
+      properties:
+        verified:
+          type: boolean
+        registered:
+          type: boolean
+        message:
+          type: string
+      example:
+        verified: false
+        registered: false
+        message: OTP (60Zzva) has been sent to m.ahmedk287@gmail.com, OTP mentioned for purpose of ease.
+    Userverified:
+      title: Userverified
+      required:
+      - verified
+      - registered
+      - message
+      type: object
+      properties:
+        verified:
+          type: boolean
+        registered:
+          type: boolean
+        message:
+          type: string
+      example:
+        verified: true
+        registered: false
+        message: User is verified. Redirect to register screen.
+    Userregistered:
+      title: Userregistered
+      required:
+      - verified
+      - registered
+      - message
+      type: object
+      properties:
+        verified:
+          type: boolean
+        registered:
+          type: boolean
+        message:
+          type: string
+      example:
+        verified: true
+        registered: true
+        message: User with email 'm.ahmedk287@gmail.com' is already registered
+    VerifyOTPRequest:
+      title: VerifyOTPRequest
+      required:
+      - email
+      - otp
+      type: object
+      properties:
+        email:
+          type: string
+        otp:
+          type: string
+      example:
+        email: m.ahmedk287@gmail.com
+        otp: nBKatV
+    Verified:
+      title: Verified
+      required:
+      - verified
+      - registered
+      - message
+      type: object
+      properties:
+        verified:
+          type: boolean
+        registered:
+          type: boolean
+        message:
+          type: string
+      example:
+        verified: true
+        registered: false
+        message: OTP has been verified. Proceed to register/signup screen.
+    OTPexpired1:
+      title: OTPexpired1
       required:
       - message
       type: object
@@ -262,9 +648,74 @@ components:
         message:
           type: string
       example:
-        message: Missing required parameters, invalid data types, or incorrect syntax in the request.
-    ForbiddenSampleResponse1:
-      title: ForbiddenSampleResponse1
+        message: 'Error: OTP has expired. Request a new OTP to continue.'
+    RegisterRequest:
+      title: RegisterRequest
+      required:
+      - username
+      - name
+      - phonenumber
+      - email
+      - password
+      type: object
+      properties:
+        username:
+          type: string
+        name:
+          type: string
+        phonenumber:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        username: mahmedk
+        name: M. Ahmed
+        phonenumber: '+923418380518'
+        email: m.ahmedk287@gmail.com
+        password: ahmed123$
+    Usercreated:
+      title: Usercreated
+      required:
+      - userId
+      - username
+      - name
+      - email
+      - phonenumber
+      - password
+      - updatedAt
+      - createdAt
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+        username:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phonenumber:
+          type: string
+        password:
+          type: string
+        updatedAt:
+          type: string
+        createdAt:
+          type: string
+      example:
+        userId: 4
+        username: mahmedk
+        name: M. Ahmed
+        email: m.ahmedk287@gmail.com
+        phonenumber: '+923418380518'
+        password: $2a$10$8..iLA7cwG80GpbsZddL6uFYc0FdzjrqiO3669vyy6LWCd7PfKHBG
+        updatedAt: 2023-03-09T11:10:28.814Z
+        createdAt: 2023-03-09T11:10:28.814Z
+    Userexists1:
+      title: Userexists1
       required:
       - message
       type: object
@@ -272,9 +723,62 @@ components:
         message:
           type: string
       example:
-        message: You are not authorized to access the requested resource
-    NotFound1:
-      title: NotFound1
+        message: 'Error: username already exists'
+    LoginRequest:
+      title: LoginRequest
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: m.ahmedk287@gmail.com
+        password: ahmed123$
+    Loggedin:
+      title: Loggedin
+      required:
+      - userId
+      - username
+      - name
+      - email
+      - phonenumber
+      - password
+      - createdAt
+      - updatedAt
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int32
+        username:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phonenumber:
+          type: string
+        password:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      example:
+        userId: 4
+        username: mahmedk
+        name: M. Ahmed
+        email: m.ahmedk287@gmail.com
+        phonenumber: '+923418380518'
+        password: $2a$10$8..iLA7cwG80GpbsZddL6uFYc0FdzjrqiO3669vyy6LWCd7PfKHBG
+        createdAt: 2023-03-09T11:10:28.814Z
+        updatedAt: 2023-03-09T11:10:28.814Z
+    Incorrectpassword1:
+      title: Incorrectpassword1
       required:
       - message
       type: object
@@ -282,9 +786,9 @@ components:
         message:
           type: string
       example:
-        message: Unable to locate the requested resource, either because it doesn't exist, or because the URL that the client used is incorrect
-    UnauthorizedSampleResponse1:
-      title: UnauthorizedSampleResponse1
+        message: 'Error: Incorrect Password'
+    Usernotfound1:
+      title: Usernotfound1
       required:
       - message
       type: object
@@ -292,7 +796,7 @@ components:
         message:
           type: string
       example:
-        message: Please provide a valid username and password or other form of authentication to access the requested resource.
+        message: "Error: Authentication failed. User doesn't exist."
 tags:
-- name: Misc
-  description: ''
+- name: Authorization
+  description: User authentication is implemented using JSON Web Tokens (JWT), which ensures secure and reliable authentication. To enhance the security of the application, OTP is used, and emails containing the OTP are sent using the mailgun.js library.

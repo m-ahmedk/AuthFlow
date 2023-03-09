@@ -15,6 +15,7 @@ const check_expiration = async (req, res, next) => {
                 email: email
             }
         });
+
         const current = new Date();
         const updatedAt = _verification.updatedAt
 

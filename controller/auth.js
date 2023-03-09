@@ -18,16 +18,11 @@ const send_otp = async (req, res) => {
         // mailgun process
         var emailBody = fs.readFileSync(path.join(__dirname, '../public/html/otp-mail.html')).toString();
         emailBody = emailBody.replace('{pincode}', code);
-        // const ack = await sendEmail(email, `You have received a new OTP`, emailBody);
-        
-        // dummy
-        const ack = {
-            status: 200
-        }
-        
+        const ack = await sendEmail(email, `You have received a new OTP`, emailBody);
+
         let message = ''
 
-        if(ack.status === 200) {
+        if (ack.status === 200) {
             await Verification.upsert({ email: email, otp: code, verified: 0 })
             message = `OTP (${code}) has been sent to ${email}, OTP mentioned for purpose of ease.`
         }
@@ -77,37 +72,33 @@ const verify_otp = async (req, res) => {
 // hashing users password before it is saved to the database with bcrypt
 const signup = async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, name, email, phonenumber, password } = req.body;
 
         const salt = await bcrypt.genSalt(10);
         let hashedPassword = await bcrypt.hash(password, salt);
 
         const data = {
-            username,
-            email,
-            password: hashedPassword,
+            username, name, email, phonenumber, password: hashedPassword,
         };
 
-        // saving the user
+        // saving the user and updating userId in Verification table
         const user = await User.create(data);
+        await Verification.update({ userId: user.userId },
+            {
+                where: { email: email }
+            }
+        )
 
         // if user details is captured
         // generate token with the user's id and the secretKey in the env file
-        // set cookie with the token generated
         if (user) {
-            let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+            let token = jwt.sign({ id: user.userId }, process.env.JWT_SECRET, {
                 expiresIn: 1 * 24 * 60 * 60 * 1000,
             });
 
-            // res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
-
-            console.log("user", JSON.stringify(user, null, 2));
-            console.log(token);
-
-            // send users details
-            return res.status(StatusCodes.CREATED).send(user);
+            return res.setHeader('Authorization', 'Bearer ' + token).status(StatusCodes.CREATED).send(user);
         } else {
-            throw new BadRequestError('Details are not correct')
+            throw new BadRequestError('Details are not correct');
         }
     } catch (error) {
         throw new GenericError(error, error.statusCode)
@@ -139,18 +130,16 @@ const login = async (req, res) => {
                     expiresIn: 1 * 24 * 60 * 60 * 1000,
                 });
 
-                // generate cookie, not done due to security issues
-                // res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
-                // console.log("user", JSON.stringify(user, null, 2));
-
                 // send user data
-                return res.status(StatusCodes.OK).send(user);
+                return res.setHeader('Authorization', 'Bearer ' + token).status(StatusCodes.OK).send(user);
 
-            } else {
-                throw new UnauthorizedError('Authentication failed')
+            } 
+            else {
+                throw new UnauthorizedError('Incorrect Password')
             }
-        } else {
-            throw new UnauthorizedError('Authentication failed')
+        } 
+        else {
+            throw new UnauthorizedError(`Authentication failed. User doesn't exist.`)
         }
     } catch (error) {
         throw new GenericError(error, error.statusCode)
