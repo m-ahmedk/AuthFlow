@@ -13,6 +13,7 @@ class GenericError extends Error {
 
         super(message)
         this.statusCode = statusCode
+
     }
 }
 
