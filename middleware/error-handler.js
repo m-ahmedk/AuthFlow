@@ -13,13 +13,10 @@ const { dashLogger } = require('../logger/logger')
 const errorHandler = (err, req, res, next) => {
     const message = "An error occurred.. Please try again later."
 
-    console.log(err.message)
     const customError = {
         message: err.message || message,
         statusCode: err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR
     }
-
-    console.log(err)
 
     if(err.code === '23503') {
         customError.message = 'SequelizeForeignKeyConstraintError: insert or update on table';
