@@ -5,8 +5,6 @@ Additionally, the project opens a _Swagger_ documentation (http://localhost:3000
 
 <br /><br />
 
-## Features (ask for this)
-
 ## Prerequisites (ask for this)
 - Node.js
 - npm
