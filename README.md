@@ -3,17 +3,12 @@ This is a _Node.js_ application that provides a secure and user-friendly system 
 
 Additionally, the project opens a _Swagger_ documentation (http://localhost:3000/api-docs) which displays all the available requests, their description, and the methods.
 
-<br /><br />
-
-## Prerequisites (ask for this)
+## Prerequisites
 - Node.js
 - npm
 
-<br /><br />
-
 ## Getting Started
 To get started, clone this repository and install the required dependencies using npm:
-<br /><br />
 
 ```
 git clone https://github.com/m-ahmedk/AuthFlow.git
@@ -38,7 +33,6 @@ npm run live
 ``` 
 
 Open the Swagger documentation in your browser at http://localhost:3000/api-docs
-<br /><br />
 
 ## Built With
 Node.js
@@ -50,11 +44,8 @@ Winston
 Swagger
 Yamljs
 
-<br /><br />
-
 ## Contributing
 If you would like to contribute to the project, please reach out to me at m.ahmedk287@gmail.com
-<br /><br />
 
 ## License
 This project is licensed under the MIT License - see the [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/m-ahmedk/AuthFlow/blob/main/LICENSE) file for details.
