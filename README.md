@@ -1,4 +1,4 @@
-# AuthFlow - Node.js Auth System with OTP
+# AuthFlow - Node.js Auth System with OTP + Postgres / Sequelize
 This is a _Node.js_ application that provides a secure and user-friendly system for user authentication and authorization, including login, registration, and OTP verification. It uses _JWT_ for authentication and _mailgun.js_ for sending OTP emails. It also includes a centralized error management system with _Winston_ logger to record errors. The database used is _Postgres_ and the ORM used is _Sequelize_.
 
 Additionally, the project opens a _Swagger_ documentation (http://localhost:3000/api-docs) which displays all the available requests, their description, and the methods.
